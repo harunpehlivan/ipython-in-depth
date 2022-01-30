@@ -46,17 +46,14 @@ def mergesort(list_of_lists, key=None):
     for i, itr in enumerate(iter(pl) for pl in list_of_lists):
         try:
             item = itr.next()
-            if key:
-                toadd = (key(item), i, item, itr)
-            else:
-                toadd = (item, i, itr)
+            toadd = (key(item), i, item, itr) if key else (item, i, itr)
             heap.append(toadd)
         except StopIteration:
             pass
     heapq.heapify(heap)
 
-    if key:
-        while heap:
+    while heap:
+        if key:
             _, idx, item, itr = heap[0]
             yield item
             try:
@@ -65,8 +62,7 @@ def mergesort(list_of_lists, key=None):
             except StopIteration:
                 heapq.heappop(heap)
 
-    else:
-        while heap:
+        else:
             item, idx, itr = heap[0]
             yield item
             try:

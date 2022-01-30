@@ -54,7 +54,7 @@ class RectPartitioner:
         self.global_num_cells = global_num_cells
         self.num_parts = num_parts
 
-    def prepare_communication (self):
+    def prepare_communication(self):
         """
         Find the subdomain rank (tuple) for each processor and
         determine the neighbor info.
@@ -64,7 +64,7 @@ class RectPartitioner:
         if nsd_<1:
             print('Number of space dimensions is %d, nothing to do' %nsd_)
             return
-        
+
         self.subd_rank = [-1,-1,-1]
         self.subd_lo_ix = [-1,-1,-1]
         self.subd_hi_ix = [-1,-1,-1]
@@ -76,7 +76,7 @@ class RectPartitioner:
 
         num_subds = 1
         for i in range(nsd_):
-            num_subds = num_subds*self.num_parts[i]
+            num_subds *= self.num_parts[i]
         if my_id==0:
             print("# subds=", num_subds)
             # should check num_subds againt num_procs
@@ -93,7 +93,7 @@ class RectPartitioner:
             offsets[2] = self.num_parts[0]*self.num_parts[1]
             self.subd_rank[1] = (my_id%offsets[2])/self.num_parts[0]
             self.subd_rank[2] = my_id/offsets[2]
-                    
+
         print("my_id=%d, subd_rank: "%my_id, self.subd_rank)
         if my_id==0:
             print("offsets=", offsets)
@@ -105,13 +105,13 @@ class RectPartitioner:
                 self.lower_neighbors[i] = my_id-offsets[i]
             if rank<self.num_parts[i]-1:
                 self.upper_neighbors[i] = my_id+offsets[i]
-                
+
             k = self.global_num_cells[i]/self.num_parts[i]
             m = self.global_num_cells[i]%self.num_parts[i]
-            
+
             ix = rank*k+max(0,rank+m-self.num_parts[i])
             self.subd_lo_ix[i] = ix
-            
+
             ix = ix+k
             if rank>=(self.num_parts[i]-m):
                 ix = ix+1  # load balancing

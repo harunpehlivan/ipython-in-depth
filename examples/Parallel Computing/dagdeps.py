@@ -81,12 +81,9 @@ def main(nodes, edges):
     from matplotlib.cm import gist_rainbow
     print("building DAG")
     G = random_dag(nodes, edges)
-    jobs = {}
     pos = {}
     colors = {}
-    for node in G:
-        jobs[node] = randomwait
-    
+    jobs = {node: randomwait for node in G}
     client = parallel.Client()
     view = client.load_balanced_view()
     print("submitting %i tasks with %i dependencies"%(nodes,edges))

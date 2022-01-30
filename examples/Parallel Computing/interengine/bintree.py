@@ -49,13 +49,12 @@ def bintree(ids, parent=None):
     parents[root] = parent
     if len(ids) == 1:
         return parents
-    else:
-        ids = ids[1:]
-        n = len(ids)
-        left = bintree(ids[:n/2], parent=root)
-        right = bintree(ids[n/2:], parent=root)
-        parents.update(left)
-        parents.update(right)
+    ids = ids[1:]
+    n = len(ids)
+    left = bintree(ids[:n/2], parent=root)
+    right = bintree(ids[n/2:], parent=root)
+    parents.update(left)
+    parents.update(right)
     return parents
 
 def reverse_bintree(parents):
@@ -226,13 +225,13 @@ class BinaryTreeCommunicator(object):
         """
         if not flat:
             value = reduce(f, value)
-        
-        for i in range(self.nchildren):
+
+        for _ in range(self.nchildren):
             value = f(value, self.recv_downstream())
-        
+
         if not self.root:
             self.send_upstream(value)
-        
+
         if all:
             if self.root:
                 self.publish(value)
